@@ -22,9 +22,10 @@ jobs:
           image_additional_mb: 4096
           base_image: ${{ matrix.base_image }}
           cpu: ${{ matrix.cpu }}
+          copy_artifact_path: "*.deb;*.build;*.buildinfo*.changes"
           commands: |
             apt-get update
-            apt-get install -y dahdi-source libnewt-dev libusb-dev \
+            apt-get install -y dahdi-source libnewt-dev libusb-1.0.0-dev \
                 asciidoc-base groff dkms build-essential devscripts fakeroot \
                 debhelper automake autotools-dev pkg-config  ca-certificates
 
@@ -35,3 +36,14 @@ jobs:
 
             cd /asl-dahdi/linux
             debuild -b -uc -us
+
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: asl-dahdi
+          path: |
+            *.deb
+            *.build
+            *.buildinfo
+            *.changes

@@ -1,0 +1,37 @@
+---
+name: build asl-dahdi
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: armv7l
+            cpu: cortex-a7
+            base_image: raspios_lite:latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pguyot/arm-runner-action@v2
+        with:
+          image_additional_mb: 4096
+          base_image: ${{ matrix.base_image }}
+          cpu: ${{ matrix.cpu }}
+          commands: |
+            apt-get update
+            apt-get install -y dahdi-source libnewt-dev libusb-dev \
+                asciidoc-base groff dkms build-essential devscripts fakeroot \
+                debhelper automake autotools-dev pkg-config  ca-certificates
+
+            cd /asl-dahdi/tools
+            autoreconf -i
+            ./configure
+            debuild -b -uc -us
+
+            cd /asl-dahdi/linux
+            debuild -b -uc -us

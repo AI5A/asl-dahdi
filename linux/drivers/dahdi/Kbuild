@@ -67,7 +67,7 @@ endif
 # VPMADT032 Loader
 ###############################################################################
 
-dahdi_vpmadt032_loader-objs := vpmadt032_loader/dahdi_vpmadt032_loader.o 
+dahdi_vpmadt032_loader-objs := vpmadt032_loader/dahdi_vpmadt032_loader.o
 
 ifneq ($(DAHDI_ARCH),)
   ifneq ($(wildcard $(src)/vpmadt032_loader/vpmadt032_$(DAHDI_ARCH).o_shipped),)
@@ -78,7 +78,7 @@ ifneq ($(DAHDI_ARCH),)
 endif
 
 ###############################################################################
-# HPEC Support 
+# HPEC Support
 ###############################################################################
 
 dahdi_echocan_hpec-objs := hpec/dahdi_echocan_hpec.o
@@ -99,8 +99,14 @@ $(obj)/pciradio.o: $(obj)/radfw.h
 
 hostprogs-y := makefw
 
+# This rule should not be needed.
+# see: https://github.com/asterisk/dahdi-linux/commit/7e6509855a69471c263bc076a8b47b3a116d28de
+# and: https://github.com/asterisk/dahdi-linux/commit/11edb7d2b5b869e8596d805553d5d1f1b469c929
+# but for some reason, the dkms build breaks without it.
+$(obj)/makefw: $(src)/makefw.c
+	$(HOSTCC) -o $@ $^
 
 $(obj)/radfw.h: $(src)/pciradio.rbt $(obj)/makefw
 	$(obj)/makefw $< radfw > $@
 
-clean-files	:= radfw.h 
+clean-files	:= radfw.h

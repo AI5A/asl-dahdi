@@ -14,6 +14,11 @@ jobs:
           - arch: armv7l
             cpu: cortex-a7
             base_image: raspios_lite:latest
+            codename: bullseye
+          - arch: armv7l
+            cpu: cortex-a7
+            base_image: raspios_lite:2021-05-07
+            codename: buster
     steps:
       - uses: actions/checkout@v2
 
@@ -37,11 +42,10 @@ jobs:
             cd /asl-dahdi/linux
             debuild -b -uc -us
 
-
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: asl-dahdi
+          name: asl-dahdi-${{ matrix.codename }}
           path: |
             *.deb
             *.build

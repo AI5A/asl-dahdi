@@ -2,6 +2,7 @@
 name: build asl-dahdi
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   build:

@@ -1,5 +1,5 @@
 ---
-name: build asl-dahdi
+name: build asl-dahdi (armv7l)
 on:
   push:
   workflow_dispatch:
@@ -46,7 +46,7 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: asl-dahdi-${{ matrix.codename }}
+          name: asl-dahdi-${{ matrix.codename }}-${{ matrix.arch }}
           path: |
             *.deb
             *.build

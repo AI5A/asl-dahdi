@@ -1,0 +1,39 @@
+---
+name: build asl-dahdi (x86)
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - codename: bullseye
+          - codename: buster
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build the docker builder image
+        run: |
+          pushd docker.ai5a
+          sed -i "s/FROM debian:.*/FROM debian:${{ matrix.codename }}/" Dockerfile
+          docker build -t asl-dahdi-builder .
+          popd
+
+      - name: Build the package
+        run: |
+          docker run --rm -v $(pwd):/asl-dahdi asl-dahdi-builder
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: asl-dahdi-${{ matrix.codename }}-x86
+          path: |
+            *.deb
+            *.build
+            *.buildinfo
+            *.changes

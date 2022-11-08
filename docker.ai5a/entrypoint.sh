@@ -1,11 +1,10 @@
 #!/usr/bin/env sh
 
-pushd tools
+cd tools
 autoreconf -i
 ./configure
 debuild -b -uc -us
-popd
 
-pushd linux
+cd ../linux
 debuild -b -uc -us
 popd

@@ -7,4 +7,3 @@ debuild -b -uc -us
 
 cd ../linux
 debuild -b -uc -us
-popd

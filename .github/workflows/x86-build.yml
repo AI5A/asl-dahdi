@@ -31,7 +31,7 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: asl-dahdi-${{ matrix.codename }}-x86
+          name: asl-dahdi-${{ matrix.codename }}-x86_64
           path: |
             *.deb
             *.build

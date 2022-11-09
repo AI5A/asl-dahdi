@@ -1,4 +1,6 @@
-#!/usr/bin/env sh -e
+#!/usr/bin/env sh
+
+set -e
 
 cd tools
 autoreconf -i

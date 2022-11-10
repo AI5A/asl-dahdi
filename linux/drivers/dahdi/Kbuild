@@ -67,15 +67,19 @@ endif
 # VPMADT032 Loader
 ###############################################################################
 
-dahdi_vpmadt032_loader-objs := vpmadt032_loader/dahdi_vpmadt032_loader.o
+# 2022-11-09 (AI5A): This leads to undefined symbols when building with modern
+# tooling. It can probably be fixed, but in the ASL world it's also probably
+# safe to just disable it. That is what I am doing for now.
 
-ifneq ($(DAHDI_ARCH),)
-  ifneq ($(wildcard $(src)/vpmadt032_loader/vpmadt032_$(DAHDI_ARCH).o_shipped),)
-    VPMADT032_LOADER_PRESENT=yes
-    dahdi_vpmadt032_loader-objs += vpmadt032_loader/vpmadt032_$(DAHDI_ARCH).o
-    obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_VPMADT032_LOADER)	+= dahdi_vpmadt032_loader.o
-  endif
-endif
+#dahdi_vpmadt032_loader-objs := vpmadt032_loader/dahdi_vpmadt032_loader.o
+
+#ifneq ($(DAHDI_ARCH),)
+#  ifneq ($(wildcard $(src)/vpmadt032_loader/vpmadt032_$(DAHDI_ARCH).o_shipped),)
+#    VPMADT032_LOADER_PRESENT=yes
+#    dahdi_vpmadt032_loader-objs += vpmadt032_loader/vpmadt032_$(DAHDI_ARCH).o
+#    obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_VPMADT032_LOADER)	+= dahdi_vpmadt032_loader.o
+#  endif
+#endif
 
 ###############################################################################
 # HPEC Support

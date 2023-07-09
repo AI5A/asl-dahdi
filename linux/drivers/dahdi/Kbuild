@@ -41,74 +41,10 @@ endif
 
 dahdi-objs := dahdi-base.o dahdi-sysfs.o dahdi-sysfs-chan.o dahdi-version.o
 
-###############################################################################
-# Find appropriate ARCH value for VPMADT032 and HPEC binary modules
-###############################################################################
-
-ifeq ($(ARCH),i386)
-  DAHDI_ARCH=x86_32
-else
-  ifeq ($(ARCH),x86_64)
-    DAHDI_ARCH=x86_64
-  else
-    ifeq ($(ARCH),x86)
-      ifeq ($(CONFIG_X86_32),y)
-        DAHDI_ARCH=x86_32
-      else
-        DAHDI_ARCH=x86_64
-      endif
-    else
-$(warning CPU Architecture '$(ARCH)' does not support VPMADT032 or HPEC. Skipping.)
-    endif
-  endif
-endif
-
-###############################################################################
-# VPMADT032 Loader
-###############################################################################
-
-# 2022-11-09 (AI5A): This leads to undefined symbols when building with modern
-# tooling. It can probably be fixed, but in the ASL world it's also probably
-# safe to just disable it. That is what I am doing for now.
-
-#dahdi_vpmadt032_loader-objs := vpmadt032_loader/dahdi_vpmadt032_loader.o
-
-#ifneq ($(DAHDI_ARCH),)
-#  ifneq ($(wildcard $(src)/vpmadt032_loader/vpmadt032_$(DAHDI_ARCH).o_shipped),)
-#    VPMADT032_LOADER_PRESENT=yes
-#    dahdi_vpmadt032_loader-objs += vpmadt032_loader/vpmadt032_$(DAHDI_ARCH).o
-#    obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_VPMADT032_LOADER)	+= dahdi_vpmadt032_loader.o
-#  endif
-#endif
-
-###############################################################################
-# HPEC Support
-###############################################################################
-
-dahdi_echocan_hpec-objs := hpec/dahdi_echocan_hpec.o
-CFLAGS_dahdi_echocan_hpec.o := -I$(src)/hpec
-
-ifneq ($(DAHDI_ARCH),)
-  ifneq ($(wildcard $(src)/hpec/hpec_$(DAHDI_ARCH).o_shipped),)
-    HPEC_PRESENT=yes
-    dahdi_echocan_hpec-objs += hpec/hpec_$(DAHDI_ARCH).o
-  endif
-endif
-
-ifeq ($(HPEC_PRESENT),yes)
-obj-$(DAHDI_BUILD_ALL)$(CONFIG_DAHDI_ECHOCAN_HPEC)	+= dahdi_echocan_hpec.o
-endif
-
 $(obj)/pciradio.o: $(obj)/radfw.h
 
+hostprogs := makefw
 hostprogs-y := makefw
-
-# This rule should not be needed.
-# see: https://github.com/asterisk/dahdi-linux/commit/7e6509855a69471c263bc076a8b47b3a116d28de
-# and: https://github.com/asterisk/dahdi-linux/commit/11edb7d2b5b869e8596d805553d5d1f1b469c929
-# but for some reason, the dkms build breaks without it.
-$(obj)/makefw: $(src)/makefw.c
-	$(HOSTCC) -o $@ $^
 
 $(obj)/radfw.h: $(src)/pciradio.rbt $(obj)/makefw
 	$(obj)/makefw $< radfw > $@

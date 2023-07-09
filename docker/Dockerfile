@@ -1,10 +1,15 @@
-FROM arm32v7/debian:buster
+ARG ARCH
+ARG OS
 
+FROM $ARCH/debian:$OS
+
+ARG ARCH
+ARG OS
 ARG USER_ID
 ARG GROUP_ID
 
-RUN addgroup --gid $GROUP_ID user
-RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+RUN addgroup --gid $GROUP_ID user; exit 0
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user; exit 0
 
 # Install build dependencies
 RUN apt-get update && apt-get -y install \
@@ -20,13 +25,12 @@ RUN apt-get update && apt-get -y install \
     wget \
     --no-install-recommends
 
-# add the kc1kcc repo for build deps
-RUN echo "deb https://kc1kcc.com/repos/asl_builds buster main" > /etc/apt/sources.list.d/kc1kcc_asl_builds.list
-RUN wget -O - https://kc1kcc.com/repos/apt.gpg.key | apt-key add -
+# Bookworm/sid-specific build dependency - fail silently if package does not exist
+RUN apt-get -y install dh-dkms; exit 0
 
 # Install application dependencies
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
-    debhelper bzip2 asciidoc-base dkms tar autoconf automake cpio pkg-config libnewt-dev bzip2 libusb-1.0-0-dev groff man-db asl-dahdi-source \
+    debhelper bzip2 asciidoc-base dkms tar autoconf automake cpio pkg-config libnewt-dev bzip2 libusb-1.0-0-dev groff man-db \
     --no-install-recommends
 
 # Import entrypoint script

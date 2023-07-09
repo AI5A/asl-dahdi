@@ -5,6 +5,9 @@ RUN apt-get update && \
   asciidoc-base groff dkms build-essential devscripts fakeroot \
   debhelper automake autotools-dev pkg-config ca-certificates cpio
 
+# Needed (only) on 12+
+RUN apt-get install -y dh-dkms || true
+
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh

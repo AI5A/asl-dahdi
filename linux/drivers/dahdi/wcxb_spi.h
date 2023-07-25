@@ -24,12 +24,6 @@
 #define __WCXB_SPI_H
 
 #include <linux/spi/spi.h>
-/* Linux kernel 5.16 and greater has removed user-space headers from the kernel include path */
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 16, 0)
-#include <asm/types.h>
-#else
-#include <stdbool.h>
-#endif
 
 struct wcxb_spi_transfer {
 	const void	*tx_buf;

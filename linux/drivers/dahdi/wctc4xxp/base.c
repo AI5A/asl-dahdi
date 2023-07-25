@@ -39,13 +39,6 @@
 #include <linux/etherdevice.h>
 #include <linux/timer.h>
 
-/* Linux kernel 5.16 and greater has removed user-space headers from the kernel include path */
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 16, 0)
-#include <asm/types.h>
-#else
-#include <stdbool.h>
-#endif
-
 #include <dahdi/kernel.h>
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)

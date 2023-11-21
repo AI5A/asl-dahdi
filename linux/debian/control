@@ -5,7 +5,6 @@ Maintainer: Adam Paul <adamjpaul@gmail.com>
 Uploaders: Adam Paul <adamjpaul@gmail.com>
 Build-Depends: debhelper (>= 12), bzip2, asciidoc-base | asciidoc,
  dkms,
- dh-dkms,
  tar (>= 1.28)
 Standards-Version: 4.3.0
 Homepage: http://www.asterisk.org/

@@ -37,8 +37,8 @@ jobs:
             apt-get update
             apt-get install -y dahdi-source libnewt-dev libusb-1.0.0-dev \
                 asciidoc-base groff dkms build-essential devscripts fakeroot \
-                debhelper automake autotools-dev pkg-config  ca-certificates \
-                dh-dkms
+                debhelper automake autotools-dev pkg-config ca-certificates
+            apt-get install -y dh-dkms || true
 
             cd /asl-dahdi/tools
             autoreconf -i
